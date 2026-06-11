@@ -1,5 +1,0 @@
-lib/prisma.ts
-lib/auth.ts
-middleware.ts
-app/(auth)/login/page.tsx
-app/(auth)/register/page.tsx
