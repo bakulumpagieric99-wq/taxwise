@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TaxWise Uganda — Professional Tax Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0C1B36;--navy2:#162444;
+  --ink:#111827;--slate:#6B7280;--slate2:#9CA3AF;
+  --warm:#FAFAF8;--white:#FFFFFF;
+  --teal:#0D7C68;--teal2:#0a6356;--teal-l:#E2F5F1;--teal-m:#B6E5DC;
+  --gold:#B8861F;--gold-l:#FDF4DC;--gold-m:#F5D98A;
+  --border:#E4E4E0;--border2:#D1D5DB;
+  --red:#DC2626;--red-l:#FEE2E2;
+  --green:#16A34A;--green-l:#DCFCE7;
+  --ff-serif:'DM Serif Display',Georgia,serif;
+  --ff-sans:'DM Sans',system-ui,sans-serif;
+  --ff-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--ff-sans);background:var(--warm);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:var(--ff-serif);font-size:1.35rem;color:var(--white);display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-gem{width:9px;height:9px;background:var(--gold);border-radius:2px;transform:rotate(45deg);flex-shrink:0}
+.logo span{color:#4DD9C0}
+nav ul{list-style:none;display:flex;gap:1.75rem}
+nav ul a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s;letter-spacing:.01em}
+nav ul a:hover{color:var(--white)}
+.nav-cta{background:var(--teal);color:var(--white);padding:.45rem 1.25rem;border-radius:6px;font-size:.85rem;font-weight:600;text-decoration:none;transition:background .2s;white-space:nowrap}
+.nav-cta:hover{background:var(--teal2)}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 55%,#0e2237 100%);padding:80px 5% 72px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;max-width:1280px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:22px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:#4DD9C0;border-radius:50%;display:inline-block}
+.hero h1{font-family:var(--ff-serif);font-size:clamp(2.1rem,3.8vw,3.4rem);color:var(--white);line-height:1.15;margin-bottom:20px;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;color:#4DD9C0}
+.hero-sub{color:rgba(255,255,255,.6);font-size:1rem;line-height:1.75;margin-bottom:32px;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:36px}
+.btn-hero{background:var(--teal);color:var(--white);padding:.8rem 1.75rem;border-radius:8px;font-weight:600;font-size:.925rem;text-decoration:none;transition:all .2s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn-hero:hover{background:var(--teal2);transform:translateY(-1px)}
+.btn-hero-ghost{background:transparent;color:var(--white);padding:.8rem 1.75rem;border-radius:8px;font-weight:600;font-size:.925rem;text-decoration:none;border:1px solid rgba(255,255,255,.3);transition:all .2s;cursor:pointer}
+.btn-hero-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.5)}
+.hero-trust{display:flex;align-items:center;gap:10px;font-size:.78rem;color:rgba(255,255,255,.45)}
+.hero-trust span{display:flex;align-items:center;gap:5px}
+.hero-trust span::before{content:'✓';color:#4DD9C0}
+
+/* Hero terminal card */
+.hero-card{background:#0a1628;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.terminal-bar{background:#141f35;border-bottom:1px solid rgba(255,255,255,.08);padding:12px 16px;display:flex;align-items:center;gap:7px}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.t-dot.r{background:#FF5F57}.t-dot.y{background:#FEBC2E}.t-dot.g{background:#28C840}
+.terminal-label{margin-left:8px;font-family:var(--ff-mono);font-size:.72rem;color:rgba(255,255,255,.35)}
+.terminal-body{padding:20px}
+.t-label{font-family:var(--ff-mono);font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px}
+.t-input{font-family:var(--ff-mono);font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.65;margin-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:16px}
+.t-cursor{display:inline-block;width:8px;height:1em;background:var(--teal);vertical-align:text-bottom;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.t-analyzing{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--teal);font-family:var(--ff-mono);margin-bottom:14px}
+.t-spinner{display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.t-result{display:none}
+.t-result.show{display:block}
+.t-section{margin-bottom:12px}
+.t-section-title{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:4px;font-family:var(--ff-mono)}
+.t-section p{font-size:.8rem;color:rgba(255,255,255,.75);line-height:1.6}
+.t-verdict{background:rgba(184,134,31,.12);border-left:3px solid var(--gold);padding:9px 12px;border-radius:0 6px 6px 0;font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:12px}
+.t-tags{display:flex;gap:5px;flex-wrap:wrap}
+.t-tag{font-size:.68rem;font-weight:600;padding:3px 8px;border-radius:12px;background:rgba(13,124,104,.2);color:#4DD9C0;border:1px solid rgba(13,124,104,.3);font-family:var(--ff-mono)}
+.risk-badge{display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-right:8px}
+.risk-high{background:rgba(220,38,38,.15);color:#FCA5A5;border:1px solid rgba(220,38,38,.25)}
+.risk-med{background:rgba(184,134,31,.15);color:#FCD34D;border:1px solid rgba(184,134,31,.25)}
+.risk-low{background:rgba(13,124,104,.15);color:#4DD9C0;border:1px solid rgba(13,124,104,.25)}
+
+/* ── STATS BAND ── */
+.stats-wrap{background:var(--navy)}
+.stats-band{max-width:1100px;margin:0 auto;padding:44px 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid rgba(255,255,255,.06)}
+.stat-item{padding:0 24px;text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+.stat-item:first-child{padding-left:0}
+.stat-item:last-child{border-right:none;padding-right:0}
+.stat-num{font-family:var(--ff-serif);font-size:2.4rem;color:var(--white);letter-spacing:-.03em}
+.stat-num b{color:#4DD9C0}
+.stat-desc{font-size:.8rem;color:rgba(255,255,255,.45);margin-top:3px}
+
+/* ── SECTION SHARED ── */
+section{padding:88px 5%}
+.s-inner{max-width:1100px;margin:0 auto}
+.s-tag{font-size:.72rem;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px}
+.s-title{font-family:var(--ff-serif);font-size:clamp(1.7rem,2.8vw,2.5rem);color:var(--ink);margin-bottom:14px;line-height:1.2;letter-spacing:-.02em}
+.s-sub{color:var(--slate);max-width:540px;line-height:1.75;margin-bottom:52px;font-size:.975rem}
+
+/* ── FEATURES STRIP ── */
+.features-bg{background:var(--white)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-card{border:1px solid var(--border);border-radius:12px;padding:26px;background:var(--warm);transition:all .2s;cursor:default}
+.feat-card:hover{border-color:var(--teal-m);box-shadow:0 4px 20px rgba(13,124,104,.08);transform:translateY(-2px)}
+.feat-icon{width:42px;height:42px;background:var(--teal-l);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:14px}
+.feat-card h3{font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:7px}
+.feat-card p{font-size:.85rem;color:var(--slate);line-height:1.65}
+
+/* ── ANALYZER DEMO ── */
+.analyzer-bg{background:var(--warm)}
+.analyzer-layout{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.panel{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.panel-head{background:var(--navy);padding:13px 18px;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:rgba(255,255,255,.85)}
+.panel-body{padding:22px}
+.panel-body textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:13px;font-family:var(--ff-sans);font-size:.85rem;color:var(--ink);resize:vertical;min-height:170px;outline:none;background:var(--warm);transition:border-color .2s;line-height:1.6}
+.panel-body textarea:focus{border-color:var(--teal);background:var(--white)}
+.upload-zone{border:2px dashed var(--border);border-radius:9px;padding:18px;text-align:center;cursor:pointer;margin-bottom:14px;transition:all .15s;background:var(--warm)}
+.upload-zone:hover,.upload-zone.active{border-color:var(--teal);background:var(--teal-l)}
+.upload-zone input[type=file]{display:none}
+.upload-icon{font-size:1.6rem;opacity:.4;margin-bottom:6px}
+.upload-text{font-size:.83rem;font-weight:600;color:var(--slate)}
+.upload-sub{font-size:.73rem;color:var(--slate2);margin-top:3px}
+.or-divider{text-align:center;font-size:.78rem;color:var(--slate2);margin:12px 0}
+.panel-controls{display:flex;gap:10px;margin-top:13px;align-items:center}
+select.panel-select{flex:1;border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-family:var(--ff-sans);font-size:.83rem;background:var(--white);color:var(--ink);outline:none;cursor:pointer}
+.btn-analyze{background:var(--teal);color:var(--white);border:none;padding:9px 20px;border-radius:7px;font-weight:600;font-size:.85rem;cursor:pointer;transition:background .2s;font-family:var(--ff-sans);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-analyze:hover{background:var(--teal2)}
+.btn-analyze:disabled{opacity:.55;cursor:not-allowed}
+.result-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;color:var(--slate2)}
+.placeholder-icon{font-size:2.4rem;opacity:.3;margin-bottom:8px}
+.result-content{display:none}
+.result-content.show{display:block}
+.result-section{margin-bottom:14px}
+.result-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);margin-bottom:5px}
+.result-section p{font-size:.875rem;color:var(--ink);line-height:1.7}
+.verdict-box{border-left:3px solid var(--gold);background:var(--gold-l);padding:10px 13px;border-radius:0 7px 7px 0;font-size:.875rem;color:var(--ink)}
+.result-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.r-tag{font-size:.7rem;font-weight:600;padding:3px 9px;border-radius:12px;background:var(--teal-l);color:var(--teal2);border:1px solid var(--teal-m)}
+.risk-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.risk-pill{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em}
+.rp-high{background:var(--red-l);color:var(--red)}
+.rp-med{background:var(--gold-l);color:var(--gold)}
+.rp-low{background:var(--teal-l);color:var(--teal)}
+.result-note{font-size:.8rem;color:var(--slate)}
+.download-btn{display:inline-flex;align-items:center;gap:6px;background:var(--warm);border:1px solid var(--border);color:var(--ink);padding:7px 14px;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .15s;margin-top:14px;font-family:var(--ff-sans)}
+.download-btn:hover{border-color:var(--teal);color:var(--teal)}
+.history-block{margin-top:24px}
+.history-title{font-size:.78rem;font-weight:700;color:var(--slate);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.hist-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:7px;font-size:.82rem;background:var(--white)}
+.hist-title{flex:1;color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-meta{color:var(--slate2);font-size:.75rem;white-space:nowrap}
+
+/* ── PROFESSIONAL INTELLIGENCE HUB ── */
+.intel-bg{background:var(--white)}
+.intel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px}
+.intel-card{border:1px solid var(--border);border-radius:13px;overflow:hidden;cursor:pointer;transition:all .2s}
+.intel-card:hover{border-color:var(--teal-m);box-shadow:0 6px 24px rgba(13,124,104,.09);transform:translateY(-2px)}
+.intel-thumb{height:100px;display:flex;align-items:center;justify-content:center;font-size:2.4rem}
+.intel-body{padding:18px}
+.intel-level{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.intel-card h4{font-size:.95rem;font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.35}
+.intel-card p{font-size:.82rem;color:var(--slate);line-height:1.6;margin-bottom:14px}
+.intel-footer{border-top:1px solid var(--border);padding:11px 18px;display:flex;justify-content:space-between;align-items:center}
+.intel-meta{font-size:.73rem;color:var(--slate2)}
+.intel-btn{font-size:.78rem;font-weight:600;color:var(--teal);text-decoration:none}
+.cpd-banner{background:linear-gradient(135deg,var(--navy) 0%,#162850 100%);border-radius:13px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:0}
+.cpd-badge{background:var(--gold);color:var(--white);font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:inline-block}
+.cpd-title{font-family:var(--ff-serif);font-size:1.3rem;color:var(--white);margin-bottom:6px}
+.cpd-sub{font-size:.85rem;color:rgba(255,255,255,.6);line-height:1.6;max-width:480px}
+.cpd-action{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--white);padding:.65rem 1.4rem;border-radius:7px;font-size:.85rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:background .2s;font-family:var(--ff-sans)}
+.cpd-action:hover{background:rgba(255,255,255,.18)}
+
+/* ── TAX CALCULATORS ── */
+.calc-bg{background:var(--warm)}
+.calc-tabs{display:flex;gap:4px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:28px;width:fit-content}
+.calc-tab{padding:8px 20px;border-radius:7px;border:none;cursor:pointer;font-family:var(--ff-sans);font-size:.875rem;font-weight:500;color:var(--slate);background:transparent;transition:all .15s;white-space:nowrap}
+.calc-tab.active{background:var(--teal);color:var(--white);font-weight:600}
+.calc-tab:hover:not(.active){background:var(--warm);color:var(--ink)}
+.calc-panel{display:none}
+.calc-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.calc-form{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:26px}
+.calc-form h3{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+.calc-form .calc-desc{font-size:.83rem;color:var(--slate);margin-bottom:20px;line-height:1.6}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:.8rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+.field input,.field select{width:100%;border:1px solid var(--border);border-radius:7px;padding:10px 13px;font-family:var(--ff-sans);font-size:.9rem;outline:none;background:var(--warm);color:var(--ink);transition:border-color .2s}
+.field input:focus,.field select:focus{border-color:var(--teal);background:var(--white)}
+.field .hint{font-size:.73rem;color:var(--slate2);margin-top:4px}
+.calc-result{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:26px}
+.calc-result h3{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:18px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:.875rem}
+.result-row:last-child{border-bottom:none}
+.result-row .lbl{color:var(--slate)}
+.result-row .val{font-weight:600;color:var(--ink);font-family:var(--ff-mono);font-size:.85rem}
+.result-row.total{background:var(--teal-l);border-radius:8px;padding:12px;margin-top:8px;border-bottom:none}
+.result-row.total .lbl{color:var(--teal2);font-weight:600;font-size:.9rem}
+.result-row.total .val{color:var(--teal);font-size:1rem;font-weight:700}
+.result-row.deduct .val{color:var(--red)}
+.result-row.credit .val{color:var(--green)}
+.calc-note{font-size:.75rem;color:var(--slate2);margin-top:14px;line-height:1.6;border-top:1px solid var(--border);padding-top:12px}
+.btn-calc{background:var(--teal);color:var(--white);border:none;padding:10px 22px;border-radius:7px;font-weight:600;font-size:.875rem;cursor:pointer;font-family:var(--ff-sans);width:100%;margin-top:4px;transition:background .2s}
+.btn-calc:hover{background:var(--teal2)}
+
+/* ── PRICING ── */
+.pricing-bg{background:var(--navy)}
+.pricing-bg .s-title{color:var(--white)}
+.pricing-bg .s-sub{color:rgba(255,255,255,.5)}
+.pricing-bg .s-tag{color:var(--gold)}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.price-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:28px 24px;position:relative}
+.price-card.pop{background:var(--teal);border-color:var(--teal)}
+.pop-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--white);font-size:.68rem;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.05em}
+.price-plan{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px}
+.price-amount{font-family:var(--ff-serif);font-size:2.3rem;color:var(--white);font-weight:400;letter-spacing:-.02em}
+.price-amount sup{font-family:var(--ff-sans);font-size:.9rem;vertical-align:top;margin-top:8px;display:inline-block}
+.price-period{font-size:.78rem;color:rgba(255,255,255,.45);margin-bottom:20px}
+.price-div{border:none;border-top:1px solid rgba(255,255,255,.12);margin:18px 0}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.price-feats li{font-size:.865rem;color:rgba(255,255,255,.8);display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.price-feats li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+.price-card.pop .price-feats li::before{color:#FFE08A}
+.btn-price{display:block;text-align:center;padding:11px;border-radius:8px;font-weight:700;font-size:.9rem;cursor:pointer;font-family:var(--ff-sans);transition:all .2s;text-decoration:none;border:1.5px solid rgba(255,255,255,.25);color:var(--white);background:transparent}
+.btn-price:hover{background:rgba(255,255,255,.1)}
+.price-card.pop .btn-price{background:var(--white);color:var(--teal);border-color:transparent}
+.price-card.pop .btn-price:hover{background:var(--teal-l)}
+.payment-row{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;margin-top:24px}
+.payment-row .p-label{font-size:.82rem;font-weight:600;color:var(--white)}
+.payment-row .p-sub{font-size:.75rem;color:rgba(255,255,255,.45);margin-top:2px}
+.pay-chips{display:flex;gap:8px}
+.pay-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.7)}
+
+/* ── TESTIMONIALS ── */
+.testi-bg{background:var(--white)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi-card{background:var(--warm);border:1px solid var(--border);border-radius:13px;padding:24px}
+.stars{color:var(--gold);font-size:.85rem;margin-bottom:12px;letter-spacing:2px}
+.testi-card blockquote{font-size:.875rem;color:var(--ink);line-height:1.75;margin-bottom:18px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--white);flex-shrink:0}
+.av1{background:var(--teal)}.av2{background:var(--navy)}.av3{background:var(--gold)}
+.author-name{font-size:.875rem;font-weight:700;color:var(--ink)}
+.author-role{font-size:.75rem;color:var(--slate)}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:52px 5% 28px}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
+.footer-logo{font-family:var(--ff-serif);font-size:1.3rem;color:var(--white);margin-bottom:10px}
+.footer-logo span{color:#4DD9C0}
+.footer-tagline{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.65;max-width:220px}
+.footer-col h5{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col ul a{color:rgba(255,255,255,.5);font-size:.83rem;text-decoration:none;transition:color .2s}
+.footer-col ul a:hover{color:var(--white)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:rgba(255,255,255,.3)}
+.footer-bottom a{color:rgba(255,255,255,.3);text-decoration:none}
+.footer-bottom a:hover{color:rgba(255,255,255,.6)}
+.icpau-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:5px 12px;border-radius:20px;font-size:.7rem;color:rgba(255,255,255,.5);margin-top:14px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .hero{grid-template-columns:1fr;padding:60px 5%}
+  .feat-grid,.intel-grid,.testi-grid{grid-template-columns:1fr 1fr}
+  .price-grid{grid-template-columns:1fr 1fr}
+  .analyzer-layout{grid-template-columns:1fr}
+  .calc-panel.active{grid-template-columns:1fr}
+  .stats-band{grid-template-columns:1fr 1fr}
+  .stat-item{padding:16px;border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  nav ul{display:none}
+}
+@media(max-width:600px){
+  .feat-grid,.intel-grid,.testi-grid,.price-grid{grid-template-columns:1fr}
+  .price-card.pop{transform:none}
+  .cpd-banner{flex-direction:column}
+  .calc-tabs{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div style="background:var(--navy)">
+<nav>
+  <a href="#" class="logo"><div class="logo-gem"></div>Tax<span>Wise</span></a>
+  <ul>
+    <li><a href="#analyzer">Analyzer</a></li>
+    <li><a href="#intelligence">Intelligence</a></li>
+    <li><a href="#calculators">Calculators</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">Start Free Trial</a>
+</nav>
+
+<!-- HERO -->
+<div style="background:var(--navy)">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow">Built for Uganda Tax Professionals</div>
+    <h1>The intelligence platform your practice<br><em>actually needs</em></h1>
+    <p class="hero-sub">AI case analysis, TAT precedent research, live tax calculators, and a professional intelligence hub — purpose-built for Uganda's tax ecosystem.</p>
+    <div class="hero-btns">
+      <a href="#pricing" class="btn-hero">Start 14-Day Free Trial →</a>
+      <a href="#analyzer" class="btn-hero-ghost">See it in action</a>
+    </div>
+    <div class="hero-trust">
+      <span>No credit card needed</span>
+      <span style="margin:0 6px;opacity:.3">·</span>
+      <span>URA · TAT · eFRIS covered</span>
+      <span style="margin:0 6px;opacity:.3">·</span>
+      <span>ICPAU CPD-eligible content</span>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <span class="terminal-label">taxwise — case analyzer</span>
+    </div>
+    <div class="terminal-body">
+      <div class="t-label">Case input</div>
+      <div class="t-input" id="heroInput"><span id="heroText"></span><span class="t-cursor" id="heroCursor"></span></div>
+      <div class="t-analyzing" id="heroAnalyzing" style="display:none"><span class="t-spinner">⟳</span> Analyzing with AI...</div>
+      <div class="t-result" id="heroResult">
+        <div class="t-section">
+          <div class="t-section-title">Summary</div>
+          <p>TAT dismissed the appeal for lack of jurisdiction. The taxpayer filed 45 days after receiving URA's objection decision, exceeding the mandatory 30-day window under Section 14 of the TAT Act. Merits were never considered.</p>
+        </div>
+        <div class="t-section">
+          <div class="t-verdict">Verdict: Appeal dismissed. No jurisdiction. Assessment of UGX 48M stands.</div>
+        </div>
+        <div class="t-section">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+            <span class="risk-badge risk-high">High Risk</span>
+            <span style="font-size:.75rem;color:rgba(255,255,255,.5)">Late filing is fatal — cannot be remedied</span>
+          </div>
+          <div class="t-tags">
+            <span class="t-tag">30-Day Rule</span><span class="t-tag">Jurisdiction</span>
+            <span class="t-tag">TAT No.145/2025</span><span class="t-tag">Late Filing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-wrap">
+<div class="stats-band">
+  <div class="stat-item"><div class="stat-num">4,200<b>+</b></div><div class="stat-desc">Cases analyzed</div></div>
+  <div class="stat-item"><div class="stat-num">85<b>%</b></div><div class="stat-desc">Time saved vs manual review</div></div>
+  <div class="stat-item"><div class="stat-num">320<b>+</b></div><div class="stat-desc">Active professionals</div></div>
+  <div class="stat-item"><div class="stat-num">30<b>s</b></div><div class="stat-desc">Average case summary</div></div>
+</div>
+</div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-bg" id="features">
+<div class="s-inner">
+  <div class="s-tag">What TaxWise Does</div>
+  <h2 class="s-title">Built for how professionals actually work</h2>
+  <p class="s-sub">Every tool in TaxWise exists because a tax professional in Uganda needed it. No generic SaaS features — only what moves the needle.</p>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-icon">⚖️</div><h3>AI Case Analyzer</h3><p>Upload a PDF or paste any TAT ruling, URA letter, or court decision. Get a structured summary — issues, verdict, risk level, and applicable law — in under 30 seconds.</p></div>
+    <div class="feat-card"><div class="feat-icon">🔍</div><h3>TAT Case Library</h3><p>Search Uganda's most comprehensive database of Tax Appeals Tribunal rulings. Filter by type, year, and outcome. Get AI expert commentary on any case.</p></div>
+    <div class="feat-card"><div class="feat-icon">🧮</div><h3>Tax Calculators</h3><p>Live PAYE, VAT, income tax, and withholding tax calculators built on Uganda's current rates. Get instant, accurate figures your clients can trust.</p></div>
+    <div class="feat-card"><div class="feat-icon">🎓</div><h3>Professional Intelligence</h3><p>Advanced courses on transfer pricing, TAT appeals strategy, cross-border WHT, and more. Monthly TAT digests and URA policy alerts. ICPAU CPD-eligible.</p></div>
+    <div class="feat-card"><div class="feat-icon">✅</div><h3>Compliance Engine</h3><p>Interactive eFRIS, VAT, and PAYE checklists with AI-generated risk reports citing specific Uganda penalties. Know your exposure before URA does.</p></div>
+    <div class="feat-card"><div class="feat-icon">📄</div><h3>Client Report Builder</h3><p>Turn any case analysis into a professional client-ready PDF report in one click. Branded, clear, and ready to send — no formatting work required.</p></div>
+  </div>
+</div>
+</section>
+
+<!-- CASE ANALYZER DEMO -->
+<section class="analyzer-bg" id="analyzer">
+<div class="s-inner">
+  <div class="s-tag">Case Analyzer</div>
+  <h2 class="s-title">From document to insight in 30 seconds</h2>
+  <p class="s-sub">Upload a PDF or paste case text. TaxWise extracts every relevant detail and delivers a structured professional analysis — ready to act on.</p>
+  <div class="analyzer-layout">
+    <div class="panel">
+      <div class="panel-head">📄 Input — Upload PDF or paste text</div>
+      <div class="panel-body">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(this)"/>
+          <div class="upload-icon">📎</div>
+          <div class="upload-text" id="uploadText">Click to upload PDF, DOC, or TXT</div>
+          <div class="upload-sub">Max 10MB · or drag & drop</div>
+        </div>
+        <div class="or-divider">— or paste text directly —</div>
+        <textarea id="caseInput" placeholder="Paste a TAT ruling, URA assessment letter, or describe a tax scenario in detail...&#10;&#10;Example: 'A taxpayer received a URA income tax assessment of UGX 120 million. The objection was rejected by the Commissioner. The taxpayer now wishes to appeal to the TAT but 38 days have passed since receiving the objection decision...'"></textarea>
+        <div class="panel-controls">
+          <select class="panel-select" id="caseType">
+            <option>TAT Ruling</option>
+            <option>URA Assessment</option>
+            <option>Income Tax Dispute</option>
+            <option>VAT Dispute</option>
+            <option>PAYE Issue</option>
+            <option>eFRIS Compliance</option>
+            <option>Withholding Tax</option>
+            <option>General Scenario</option>
+          </select>
+          <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">
+            <span id="btnSpinner" style="display:none">⟳</span>
+            <span id="btnText">Analyze →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">✦ AI Analysis Output</div>
+      <div class="panel-body">
+        <div class="result-placeholder" id="rPlaceholder">
+          <div class="placeholder-icon">📋</div>
+          <div style="font-size:.875rem;color:var(--slate2)">Analysis appears here</div>
+          <div style="font-size:.75rem;color:var(--slate2);margin-top:4px;opacity:.6">Paste a case and click Analyze</div>
+        </div>
+        <div class="result-content" id="rContent"></div>
+        <div class="history-block" id="historyBlock" style="display:none">
+          <div class="history-title">Recent Analyses</div>
+          <div id="historyList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PROFESSIONAL INTELLIGENCE HUB -->
+<section class="intel-bg" id="intelligence">
+<div class="s-inner">
+  <div class="s-tag">Professional Intelligence Hub</div>
+  <h2 class="s-title">Advanced knowledge for serious practitioners</h2>
+  <p class="s-sub">Not basic tax theory — advanced content for professionals who already know the fundamentals and want to stay ahead of complex issues, new rulings, and shifting URA positions.</p>
+  <div class="intel-grid">
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#E2F5F1">📊</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:var(--red)">Advanced</div>
+        <h4>Transfer Pricing in Uganda</h4>
+        <p>Section 90A Income Tax Act, arm's length principle, documentation requirements, URA's audit approach, and how to defend a transfer pricing position before TAT.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">6 modules · 4.5 hrs · CPD eligible</span><a class="intel-btn" href="#">Start →</a></div>
+    </div>
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#FDF4DC">⚖️</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:var(--gold)">Advanced</div>
+        <h4>TAT Appeals — Winning Strategy</h4>
+        <p>Jurisdiction traps, the 30-day rule, burden of proof, cross-examination of URA witnesses, drafting grounds of appeal that courts take seriously. Case-study heavy.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">8 modules · 5 hrs · CPD eligible</span><a class="intel-btn" href="#">Start →</a></div>
+    </div>
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#EEF2FB">🌍</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:#534AB7">Advanced</div>
+        <h4>Cross-Border WHT & Tax Treaties</h4>
+        <p>Withholding tax on dividends, interest, royalties, and digital services. Uganda's double taxation treaties, treaty override positions, and permanent establishment risks.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">5 modules · 3.5 hrs · CPD eligible</span><a class="intel-btn" href="#">Start →</a></div>
+    </div>
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#FBEAF0">🛡️</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:#993556">Advanced</div>
+        <h4>URA Audit Defence</h4>
+        <p>What triggers an audit, how to manage the audit process, objection strategy, limitation periods, and the practical art of settling tax disputes before they reach TAT.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">7 modules · 4 hrs · CPD eligible</span><a class="intel-btn" href="#">Start →</a></div>
+    </div>
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#F1EFE8">📰</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:var(--slate)">Monthly Digest</div>
+        <h4>TAT Case Digest — June 2026</h4>
+        <p>The 4 most important TAT rulings this month with AI expert commentary on what they mean for your practice and your clients. New issue every month.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">Latest issue · 20 min read</span><a class="intel-btn" href="#">Read →</a></div>
+    </div>
+    <div class="intel-card" onclick="this.style.borderColor='var(--teal)'">
+      <div class="intel-thumb" style="background:#E2F5F1">🔔</div>
+      <div class="intel-body">
+        <div class="intel-level" style="color:var(--teal)">Policy Alerts</div>
+        <h4>URA Policy & Rate Updates</h4>
+        <p>When URA issues new guidance, changes rates, or the Minister announces budget amendments — you get a 3-minute professional briefing before your clients ask you about it.</p>
+      </div>
+      <div class="intel-footer"><span class="intel-meta">Ongoing · Email + in-app</span><a class="intel-btn" href="#">Subscribe →</a></div>
+    </div>
+  </div>
+  <div class="cpd-banner">
+    <div>
+      <div class="cpd-badge">ICPAU CPD Accreditation</div>
+      <div class="cpd-title">Every course counts toward your CPD hours</div>
+      <p class="cpd-sub">TaxWise advanced courses are being submitted for ICPAU CPD accreditation. Once approved, your subscription fulfils part of your annual professional development obligation — making TaxWise a business necessity, not a nice-to-have.</p>
+    </div>
+    <button class="cpd-action">Learn About CPD →</button>
+  </div>
+</div>
+</section>
+
+<!-- TAX CALCULATORS -->
+<section class="calc-bg" id="calculators">
+<div class="s-inner">
+  <div class="s-tag">Tax Calculators</div>
+  <h2 class="s-title">Uganda-specific rates. Instant results.</h2>
+  <p class="s-sub">Live calculators built on Uganda's current tax legislation. Use them yourself or share with clients. No spreadsheets, no guessing.</p>
+  <div class="calc-tabs">
+    <button class="calc-tab active" onclick="switchCalc('paye',this)">PAYE Calculator</button>
+    <button class="calc-tab" onclick="switchCalc('vat',this)">VAT Calculator</button>
+    <button class="calc-tab" onclick="switchCalc('income',this)">Income Tax</button>
+    <button class="calc-tab" onclick="switchCalc('wht',this)">Withholding Tax</button>
+  </div>
+
+  <!-- PAYE CALCULATOR -->
+  <div class="calc-panel active" id="calc-paye">
+    <div class="calc-form">
+      <h3>PAYE Calculator (2024/25)</h3>
+      <p class="calc-desc">Calculate net take-home pay and employer costs from gross salary. Applies Uganda's current income tax bands and NSSF rates.</p>
+      <div class="field"><label>Gross Monthly Salary (UGX)</label><input type="number" id="paye-gross" placeholder="e.g. 3,500,000" oninput="calcPAYE()"/></div>
+      <div class="field"><label>NSSF Deduction</label><select id="paye-nssf" onchange="calcPAYE()"><option value="yes">Yes — deduct 10% employee NSSF</option><option value="no">No NSSF</option></select></div>
+      <div class="field"><label>Other Monthly Allowances (UGX)</label><input type="number" id="paye-allow" placeholder="e.g. housing, transport" oninput="calcPAYE()"/></div>
+    </div>
+    <div class="calc-result">
+      <h3>Payslip Breakdown</h3>
+      <div id="paye-result"><div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter a gross salary to calculate</div></div>
+    </div>
+  </div>
+
+  <!-- VAT CALCULATOR -->
+  <div class="calc-panel" id="calc-vat">
+    <div class="calc-form">
+      <h3>VAT Calculator (18%)</h3>
+      <p class="calc-desc">Calculate VAT-inclusive or VAT-exclusive amounts. Useful for invoicing, input tax claims, and VAT return preparation.</p>
+      <div class="field"><label>Amount (UGX)</label><input type="number" id="vat-amount" placeholder="e.g. 1,000,000" oninput="calcVAT()"/></div>
+      <div class="field"><label>Calculation Type</label><select id="vat-type" onchange="calcVAT()"><option value="excl">Add VAT (amount is VAT-exclusive)</option><option value="incl">Extract VAT (amount is VAT-inclusive)</option></select></div>
+      <div class="field"><label>Supply Type</label><select id="vat-supply" onchange="calcVAT()"><option value="standard">Standard rated — 18%</option><option value="zero">Zero rated — 0%</option><option value="exempt">Exempt — no VAT</option></select></div>
+    </div>
+    <div class="calc-result">
+      <h3>VAT Breakdown</h3>
+      <div id="vat-result"><div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter an amount to calculate</div></div>
+    </div>
+  </div>
+
+  <!-- INCOME TAX ESTIMATOR -->
+  <div class="calc-panel" id="calc-income">
+    <div class="calc-form">
+      <h3>Income Tax Estimator (2024/25)</h3>
+      <p class="calc-desc">Estimate annual income tax liability for individuals and corporations under Uganda's current tax bands.</p>
+      <div class="field"><label>Taxpayer Type</label><select id="inc-type" onchange="calcIncome()"><option value="individual">Individual</option><option value="corporate">Company (30%)</option><option value="agri">Agribusiness Company (25%)</option></select></div>
+      <div class="field"><label>Annual Chargeable Income (UGX)</label><input type="number" id="inc-income" placeholder="e.g. 36,000,000" oninput="calcIncome()"/></div>
+      <div class="field"><label>Allowable Deductions (UGX)</label><input type="number" id="inc-deduct" placeholder="e.g. business expenses" oninput="calcIncome()"/></div>
+    </div>
+    <div class="calc-result">
+      <h3>Tax Liability Estimate</h3>
+      <div id="income-result"><div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter income to estimate tax</div></div>
+    </div>
+  </div>
+
+  <!-- WHT CALCULATOR -->
+  <div class="calc-panel" id="calc-wht">
+    <div class="calc-form">
+      <h3>Withholding Tax Calculator</h3>
+      <p class="calc-desc">Calculate WHT on payments to residents and non-residents. Covers dividends, interest, royalties, rent, and service fees.</p>
+      <div class="field"><label>Gross Payment Amount (UGX)</label><input type="number" id="wht-amount" placeholder="e.g. 5,000,000" oninput="calcWHT()"/></div>
+      <div class="field"><label>Payment Type</label><select id="wht-type" onchange="calcWHT()">
+        <option value="15">Dividends — 15%</option>
+        <option value="15">Interest (resident) — 15%</option>
+        <option value="15">Royalties (resident) — 15%</option>
+        <option value="6">Rent (resident) — 6%</option>
+        <option value="6">Professional fees (resident) — 6%</option>
+        <option value="15">Services to non-resident — 15%</option>
+        <option value="10">Interest (non-resident) — 10%</option>
+        <option value="10">Royalties (non-resident) — 10%</option>
+        <option value="10">Natural resource payments — 10%</option>
+      </select></div>
+      <div class="field"><label>Recipient</label><select id="wht-recipient" onchange="calcWHT()"><option value="resident">Resident</option><option value="nonresident">Non-resident</option></select></div>
+    </div>
+    <div class="calc-result">
+      <h3>WHT Breakdown</h3>
+      <div id="wht-result"><div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter an amount to calculate</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="pricing">
+<div class="s-inner">
+  <div class="s-tag">Pricing</div>
+  <h2 class="s-title">Priced for Uganda's market</h2>
+  <p class="s-sub">All plans include a 14-day free trial. No credit card needed to start. Cancel any time.</p>
+  <div class="price-grid">
+    <div class="price-card">
+      <div class="price-plan">Starter</div>
+      <div class="price-amount"><sup>UGX</sup> 50K</div>
+      <div class="price-period">per month</div>
+      <hr class="price-div"/>
+      <ul class="price-feats">
+        <li>10 case analyses / month</li>
+        <li>AI summaries & risk badges</li>
+        <li>TAT case library access</li>
+        <li>Tax calculators (all 4)</li>
+        <li>PDF report export</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#" class="btn-price">Start Free Trial</a>
+    </div>
+    <div class="price-card pop">
+      <div class="pop-badge">Most Popular</div>
+      <div class="price-plan">Professional</div>
+      <div class="price-amount"><sup>UGX</sup> 150K</div>
+      <div class="price-period">per month</div>
+      <hr class="price-div"/>
+      <ul class="price-feats">
+        <li>100 case analyses / month</li>
+        <li>PDF upload & analysis</li>
+        <li>Full AI analysis + precedents</li>
+        <li>Compliance checker + AI report</li>
+        <li>Professional Intelligence Hub</li>
+        <li>ICPAU CPD-eligible courses</li>
+        <li>Client report builder</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="btn-price">Start 14-Day Free Trial</a>
+    </div>
+    <div class="price-card">
+      <div class="price-plan">Firm</div>
+      <div class="price-amount"><sup>UGX</sup> 400K</div>
+      <div class="price-period">per month</div>
+      <hr class="price-div"/>
+      <ul class="price-feats">
+        <li>Unlimited case analyses</li>
+        <li>Up to 10 team members</li>
+        <li>Custom client branding</li>
+        <li>Team collaboration tools</li>
+        <li>Admin portal & usage stats</li>
+        <li>API access</li>
+        <li>Dedicated account manager</li>
+      </ul>
+      <a href="#" class="btn-price">Contact Sales</a>
+    </div>
+  </div>
+  <div class="payment-row">
+    <div><div class="p-label">Payment Methods</div><div class="p-sub">Pay with mobile money, card, or bank transfer</div></div>
+    <div class="pay-chips">
+      <div class="pay-chip">MTN MoMo</div>
+      <div class="pay-chip">Airtel Money</div>
+      <div class="pay-chip">Visa / MC</div>
+      <div class="pay-chip">Bank Transfer</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-bg">
+<div class="s-inner">
+  <div class="s-tag">Trusted By Professionals</div>
+  <h2 class="s-title">What practitioners are saying</h2>
+  <p class="s-sub">Real feedback from accountants, tax lawyers, and consultants across Uganda.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The case analyzer is the tool I didn't know I needed. I reviewed 14 TAT rulings last week in the time it used to take me to read two. The risk tagging alone has saved me from advising clients badly on the 30-day rule."</blockquote>
+      <div class="testi-author">
+        <div class="avatar av1">RK</div>
+        <div><div class="author-name">Ronald Kakembo</div><div class="author-role">Tax Consultant, Kampala</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The Transfer Pricing course is genuinely the best Uganda-specific material I've found. My firm handles several multinational clients and we were working off outdated notes. This is current, practical, and CPD-eligible."</blockquote>
+      <div class="testi-author">
+        <div class="avatar av2">PM</div>
+        <div><div class="author-name">Patricia Mutebi</div><div class="author-role">Partner, Tax & Advisory Firm</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The PAYE and WHT calculators alone are worth the subscription. I used to have a spreadsheet I'd built myself that kept breaking. Now I just use TaxWise and it's always on the right rates. Clients love the instant reports."</blockquote>
+      <div class="testi-author">
+        <div class="avatar av3">JN</div>
+        <div><div class="author-name">James Nsubuga</div><div class="author-role">Finance Manager, Entebbe</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Tax<span>Wise</span></div>
+      <p class="footer-tagline">Professional tax intelligence for Uganda's tax ecosystem. AI-powered, practitioner-focused.</p>
+      <div class="icpau-badge">🇺🇬 ICPAU CPD Accreditation Pending</div>
+    </div>
+    <div class="footer-col"><h5>Product</h5><ul><li><a href="#">Case Analyzer</a></li><li><a href="#">Case Library</a></li><li><a href="#">Tax Calculators</a></li><li><a href="#">Compliance Engine</a></li><li><a href="#">Client Reports</a></li></ul></div>
+    <div class="footer-col"><h5>Intelligence</h5><ul><li><a href="#">Transfer Pricing</a></li><li><a href="#">TAT Appeals</a></li><li><a href="#">Cross-Border WHT</a></li><li><a href="#">URA Audit Defence</a></li><li><a href="#">Monthly Digest</a></li></ul></div>
+    <div class="footer-col"><h5>Company</h5><ul><li><a href="#">About</a></li><li><a href="#">Pricing</a></li><li><a href="#">Contact</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 TaxWise Uganda. All rights reserved.</span>
+    <span><a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">Support</a></span>
+  </div>
+</div>
+</footer>
+
+<script>
+// ── HERO TYPEWRITER ───────────────────────────────────────────────────────────
+const heroCase = "Mwanje v URA — TAT No.145/2025. Taxpayer filed appeal on day 45 after receiving objection decision. TAT must determine jurisdiction.";
+let heroIdx = 0;
+const heroTextEl = document.getElementById('heroText');
+const heroCursorEl = document.getElementById('heroCursor');
+const heroAnalyzing = document.getElementById('heroAnalyzing');
+const heroResult = document.getElementById('heroResult');
+
+function typeHero(){
+  if(heroIdx < heroCase.length){
+    heroTextEl.textContent += heroCase[heroIdx++];
+    setTimeout(typeHero, heroIdx < 20 ? 60 : 30);
+  } else {
+    heroCursorEl.style.display='none';
+    setTimeout(()=>{
+      heroAnalyzing.style.display='flex';
+      setTimeout(()=>{
+        heroAnalyzing.style.display='none';
+        heroResult.classList.add('show');
+      },1800);
+    },400);
+  }
+}
+setTimeout(typeHero, 800);
+
+// ── FILE UPLOAD ───────────────────────────────────────────────────────────────
+function handleFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  document.getElementById('uploadText').textContent = '✓ ' + file.name;
+  document.getElementById('uploadZone').classList.add('active');
+  document.getElementById('caseInput').value = '[PDF Uploaded: ' + file.name + ']\n\nIn production, text is extracted server-side with pdf-parse. For this demo, you can also paste case text below.';
+}
+
+// ── CASE ANALYZER ─────────────────────────────────────────────────────────────
+let analysisHistory = [];
+
+async function runAnalysis(){
+  const text = document.getElementById('caseInput').value.trim();
+  const caseType = document.getElementById('caseType').value;
+  if(!text){ alert('Please paste or upload case text first.'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  const spinner = document.getElementById('btnSpinner');
+  const btnText = document.getElementById('btnText');
+  btn.disabled = true;
+  spinner.style.display = 'inline';
+  btnText.textContent = 'Analyzing...';
+  document.getElementById('rPlaceholder').style.display='flex';
+  document.getElementById('rContent').classList.remove('show');
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system:`You are TaxWise, an AI specializing in Uganda tax law (URA, TAT, Income Tax Act Cap 340, VAT Act Cap 349, PAYE, eFRIS, WHT). Analyze the case or scenario. Respond ONLY with valid JSON — no markdown, no backticks:\n{"summary":"2-3 sentence plain summary","keyIssues":["issue1","issue2","issue3"],"verdict":"outcome or likely outcome","risk":"low|medium|high","riskNote":"one sentence key risk","advice":"2-3 sentences practical advice","tags":["tag1","tag2","tag3","tag4"],"applicableLaw":["Section X, Act Y"]}`,
+        messages:[{role:"user",content:`Case Type: ${caseType}\n\n${text}`}]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.map(i=>i.text||'').join('') || '';
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderResult(parsed, caseType, text);
+    analysisHistory.unshift({title: text.slice(0,60)+'...', type: caseType, risk: parsed.risk, date: new Date().toLocaleDateString()});
+    if(analysisHistory.length > 5) analysisHistory.pop();
+    renderHistory();
+  } catch(e){
+    document.getElementById('rContent').innerHTML=`<div style="color:var(--red);font-size:.875rem;padding:16px 0">Analysis failed — please try again.<br><small style="opacity:.6">${e.message}</small></div>`;
+    document.getElementById('rContent').classList.add('show');
+    document.getElementById('rPlaceholder').style.display='none';
+  } finally {
+    btn.disabled=false; spinner.style.display='none'; btnText.textContent='Analyze →';
+  }
+}
+
+function renderResult(p, caseType, inputText){
+  const riskClass = {high:'rp-high',medium:'rp-med',low:'rp-low'}[p.risk]||'rp-low';
+  document.getElementById('rContent').innerHTML=`
+    <div class="result-section"><div class="result-label">Summary</div><p>${p.summary}</p></div>
+    <div class="result-section"><div class="result-label">Key Issues</div>${(p.keyIssues||[]).map(i=>`<p style="margin-bottom:5px">• ${i}</p>`).join('')}</div>
+    <div class="result-section"><div class="result-label">Verdict</div><div class="verdict-box">${p.verdict}</div></div>
+    <div class="risk-row"><span class="risk-pill ${riskClass}">${p.risk} risk</span><span class="result-note">${p.riskNote}</span></div>
+    <div class="result-section" style="margin-top:14px"><div class="result-label">Practical Advice</div><p>${p.advice}</p></div>
+    <div class="result-section"><div class="result-tags">${(p.tags||[]).map(t=>`<span class="r-tag">${t}</span>`).join('')}</div></div>
+    ${p.applicableLaw?.length?`<div class="result-section"><div class="result-label">Applicable Law</div>${p.applicableLaw.map(l=>`<p style="font-size:.8rem;color:var(--slate);margin-bottom:3px">• ${l}</p>`).join('')}</div>`:''}
+    <button class="download-btn" onclick="downloadReport(${JSON.stringify(p).replace(/"/g,'&quot;')}, '${caseType}')">⬇ Download Report</button>`;
+  document.getElementById('rContent').classList.add('show');
+  document.getElementById('rPlaceholder').style.display='none';
+}
+
+function downloadReport(p, caseType){
+  const content=`TAXWISE CASE ANALYSIS REPORT\n${'='.repeat(50)}\nGenerated: ${new Date().toLocaleString()}\nCase Type: ${caseType}\n\nSUMMARY\n${p.summary}\n\nKEY ISSUES\n${(p.keyIssues||[]).map((i,n)=>`${n+1}. ${i}`).join('\n')}\n\nVERDICT\n${p.verdict}\n\nRISK: ${(p.risk||'').toUpperCase()}\n${p.riskNote}\n\nPRACTICAL ADVICE\n${p.advice}\n\nAPPLICABLE LAW\n${(p.applicableLaw||[]).join('\n')}\n\nTAGS: ${(p.tags||[]).join(', ')}\n\n${'='.repeat(50)}\nPowered by TaxWise Uganda`;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
+  a.download='taxwise-analysis.txt'; a.click();
+}
+
+function renderHistory(){
+  if(!analysisHistory.length) return;
+  const list = document.getElementById('historyList');
+  const riskCol={high:'var(--red)',medium:'var(--gold)',low:'var(--teal)'};
+  list.innerHTML = analysisHistory.map(h=>`
+    <div class="hist-item">
+      <div class="hist-title">${h.title}</div>
+      <div class="hist-meta">${h.type}</div>
+      <span style="font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:10px;background:${riskCol[h.risk]||'var(--teal)'}20;color:${riskCol[h.risk]||'var(--teal)'};border:1px solid ${riskCol[h.risk]||'var(--teal)'}40">${h.risk}</span>
+    </div>`).join('');
+  document.getElementById('historyBlock').style.display='block';
+}
+
+// ── CALCULATORS ───────────────────────────────────────────────────────────────
+function switchCalc(id, btn){
+  document.querySelectorAll('.calc-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.calc-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('calc-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function fmt(n){ return 'UGX ' + Math.round(n).toLocaleString(); }
+function pct(n){ return n.toFixed(1) + '%'; }
+
+// PAYE
+function calcPAYE(){
+  const gross = parseFloat(document.getElementById('paye-gross').value)||0;
+  const allow = parseFloat(document.getElementById('paye-allow').value)||0;
+  const doNSSF = document.getElementById('paye-nssf').value === 'yes';
+  if(!gross){ document.getElementById('paye-result').innerHTML='<div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter a gross salary to calculate</div>'; return; }
+
+  const annualGross = (gross + allow) * 12;
+  const nssf = doNSSF ? gross * 0.10 : 0;
+  const annualNSSF = nssf * 12;
+  const taxable = annualGross - annualNSSF;
+
+  // Uganda 2024/25 bands (annual)
+  let tax = 0;
+  if(taxable <= 2820000) tax = 0;
+  else if(taxable <= 4920000) tax = (taxable - 2820000) * 0.10;
+  else if(taxable <= 120000000) tax = 210000 + (taxable - 4920000) * 0.20;
+  else tax = 210000 + (120000000-4920000)*0.20 + (taxable-120000000)*0.30;
+
+  const monthlyTax = tax / 12;
+  const employerNSSF = gross * 0.10;
+  const netPay = gross + allow - nssf - monthlyTax;
+  const effectiveRate = gross > 0 ? (monthlyTax/gross)*100 : 0;
+
+  document.getElementById('paye-result').innerHTML=`
+    <div class="result-row"><span class="lbl">Gross Salary</span><span class="val">${fmt(gross)}</span></div>
+    ${allow>0?`<div class="result-row"><span class="lbl">Allowances</span><span class="val">${fmt(allow)}</span></div>`:''}
+    ${doNSSF?`<div class="result-row deduct"><span class="lbl">NSSF (Employee 10%)</span><span class="val">- ${fmt(nssf)}</span></div>`:''}
+    <div class="result-row deduct"><span class="lbl">PAYE Tax</span><span class="val">- ${fmt(monthlyTax)}</span></div>
+    <div class="result-row total"><span class="lbl">Net Take-Home</span><span class="val">${fmt(netPay)}</span></div>
+    <div class="result-row" style="margin-top:8px"><span class="lbl">Effective Tax Rate</span><span class="val">${pct(effectiveRate)}</span></div>
+    <div class="result-row"><span class="lbl">Employer NSSF (10%)</span><span class="val">${fmt(employerNSSF)}</span></div>
+    <div class="result-row"><span class="lbl">Total Employer Cost</span><span class="val">${fmt(gross + allow + employerNSSF)}</span></div>
+    <div class="calc-note">Based on Uganda Income Tax Act Cap 340 — 2024/25 bands. Annual taxable income: ${fmt(taxable)}. Annual PAYE: ${fmt(tax)}. Rates: 0% up to UGX 2.82M, 10% to 4.92M, 20% to 120M, 30% above.</div>`;
+}
+
+// VAT
+function calcVAT(){
+  const amount = parseFloat(document.getElementById('vat-amount').value)||0;
+  const type = document.getElementById('vat-type').value;
+  const supply = document.getElementById('vat-supply').value;
+  if(!amount){ document.getElementById('vat-result').innerHTML='<div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter an amount to calculate</div>'; return; }
+  if(supply !== 'standard'){
+    document.getElementById('vat-result').innerHTML=`
+      <div class="result-row"><span class="lbl">Amount</span><span class="val">${fmt(amount)}</span></div>
+      <div class="result-row"><span class="lbl">VAT Rate</span><span class="val">${supply==='zero'?'0% (zero-rated)':'Exempt'}</span></div>
+      <div class="result-row deduct"><span class="lbl">VAT Amount</span><span class="val">UGX 0</span></div>
+      <div class="result-row total"><span class="lbl">Total Amount</span><span class="val">${fmt(amount)}</span></div>
+      <div class="calc-note">${supply==='zero'?'Zero-rated supplies: exports, some foodstuffs, educational materials. No VAT charged, but input credits still claimable.':'Exempt supplies: medical services, financial services, residential accommodation. No VAT charged and input credits cannot be claimed.'}</div>`;
+    return;
+  }
+  const rate = 0.18;
+  let netAmount, vatAmount, total;
+  if(type === 'excl'){
+    netAmount = amount; vatAmount = amount * rate; total = amount + vatAmount;
+  } else {
+    total = amount; netAmount = amount / (1 + rate); vatAmount = total - netAmount;
+  }
+  document.getElementById('vat-result').innerHTML=`
+    <div class="result-row"><span class="lbl">Net Amount (ex. VAT)</span><span class="val">${fmt(netAmount)}</span></div>
+    <div class="result-row deduct"><span class="lbl">VAT @ 18%</span><span class="val">${fmt(vatAmount)}</span></div>
+    <div class="result-row total"><span class="lbl">VAT-Inclusive Total</span><span class="val">${fmt(total)}</span></div>
+    <div class="result-row" style="margin-top:8px"><span class="lbl">VAT as % of Total</span><span class="val">${pct((vatAmount/total)*100)}</span></div>
+    <div class="calc-note">Standard rate: 18% per Uganda VAT Act Cap 349. VAT return due by 15th of the following month. Late filing: 2% per month on outstanding tax.</div>`;
+}
+
+// INCOME TAX
+function calcIncome(){
+  const type = document.getElementById('inc-type').value;
+  const income = parseFloat(document.getElementById('inc-income').value)||0;
+  const deduct = parseFloat(document.getElementById('inc-deduct').value)||0;
+  if(!income){ document.getElementById('income-result').innerHTML='<div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter income to estimate tax</div>'; return; }
+
+  const chargeable = Math.max(0, income - deduct);
+  let tax = 0, rateLabel = '';
+
+  if(type === 'individual'){
+    if(chargeable <= 2820000){ tax=0; rateLabel='0% — below threshold'; }
+    else if(chargeable <= 4920000){ tax=(chargeable-2820000)*0.10; rateLabel='10% marginal rate'; }
+    else if(chargeable <= 120000000){ tax=210000+(chargeable-4920000)*0.20; rateLabel='20% marginal rate'; }
+    else{ tax=210000+(120000000-4920000)*0.20+(chargeable-120000000)*0.30; rateLabel='30% marginal rate'; }
+  } else if(type === 'corporate'){
+    tax = chargeable * 0.30; rateLabel = '30% corporate rate';
+  } else {
+    tax = chargeable * 0.25; rateLabel = '25% agribusiness rate';
+  }
+
+  const effective = chargeable > 0 ? (tax/chargeable)*100 : 0;
+  document.getElementById('income-result').innerHTML=`
+    <div class="result-row"><span class="lbl">Gross Income</span><span class="val">${fmt(income)}</span></div>
+    ${deduct>0?`<div class="result-row deduct"><span class="lbl">Allowable Deductions</span><span class="val">- ${fmt(deduct)}</span></div>`:''}
+    <div class="result-row"><span class="lbl">Chargeable Income</span><span class="val">${fmt(chargeable)}</span></div>
+    <div class="result-row deduct"><span class="lbl">Income Tax (${rateLabel})</span><span class="val">${fmt(tax)}</span></div>
+    <div class="result-row total"><span class="lbl">Net After Tax</span><span class="val">${fmt(chargeable - tax)}</span></div>
+    <div class="result-row" style="margin-top:8px"><span class="lbl">Effective Tax Rate</span><span class="val">${pct(effective)}</span></div>
+    <div class="calc-note">Based on Income Tax Act Cap 340. ${type==='individual'?'Individual bands: 0% (≤2.82M), 10% (2.82M–4.92M), 20% (4.92M–120M), 30% (above 120M). Returns due 30 June.':type==='corporate'?'Corporate rate: 30% flat on chargeable income. Returns due 6 months after accounting period end.':'Agribusiness rate: 25% flat. Must derive 80%+ of income from agricultural activities.'}</div>`;
+}
+
+// WHT
+function calcWHT(){
+  const amount = parseFloat(document.getElementById('wht-amount').value)||0;
+  const rate = parseFloat(document.getElementById('wht-type').value)/100;
+  if(!amount){ document.getElementById('wht-result').innerHTML='<div style="color:var(--slate2);font-size:.875rem;padding:20px 0;text-align:center">Enter an amount to calculate</div>'; return; }
+  const wht = amount * rate;
+  const netPayment = amount - wht;
+  const paymentType = document.getElementById('wht-type').options[document.getElementById('wht-type').selectedIndex].text;
+  document.getElementById('wht-result').innerHTML=`
+    <div class="result-row"><span class="lbl">Gross Payment</span><span class="val">${fmt(amount)}</span></div>
+    <div class="result-row"><span class="lbl">Payment Type</span><span class="val" style="font-family:var(--ff-sans);font-size:.78rem">${paymentType}</span></div>
+    <div class="result-row deduct"><span class="lbl">WHT Deducted</span><span class="val">- ${fmt(wht)}</span></div>
+    <div class="result-row total"><span class="lbl">Net Payment to Recipient</span><span class="val">${fmt(netPayment)}</span></div>
+    <div class="result-row" style="margin-top:8px"><span class="lbl">WHT to Remit to URA</span><span class="val">${fmt(wht)}</span></div>
+    <div class="calc-note">WHT must be remitted to URA by the 15th of the following month. Failure to withhold makes the payer liable for the tax plus 2% monthly interest. Source: Income Tax Act Cap 340 — Third Schedule.</div>`;
+}
+
+// Drag-and-drop on upload zone
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('active'); });
+zone.addEventListener('dragleave', ()=> zone.classList.remove('active'));
+zone.addEventListener('drop', e=>{ e.preventDefault(); zone.classList.remove('active'); const f=e.dataTransfer.files[0]; if(f){ document.getElementById('fileInput').files=e.dataTransfer.files; handleFile(document.getElementById('fileInput')); }});
+</script>
+</body>
+</html>
