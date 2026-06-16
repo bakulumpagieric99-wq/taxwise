@@ -125,6 +125,7 @@ export default function TaxWiseSaaS() {
     }
   };
 
+  // Show loading screen while auth state is being determined
   if (loading) {
     return (
       <div style={{ display: "flex", minHeight: "100vh", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#FAFAF8", fontFamily: "'Inter', sans-serif" }}>
