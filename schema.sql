@@ -94,9 +94,39 @@ create table public.subscriptions (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Site settings controlled by Admin
+create table public.site_settings (
+  key varchar primary key,
+  value text not null
+);
+
+-- Audit log for Admin actions
+create table public.admin_logs (
+  id uuid primary key default gen_random_uuid(),
+  action varchar not null,
+  performed_by uuid references public.users(id) on delete cascade not null,
+  metadata jsonb default '{}'::jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- ==========================================
--- 2. Row Level Security (RLS)
+-- 2. Row Level Security (RLS) & Helper Functions
 -- ==========================================
+
+-- Helper function to check if the current user is an Admin
+-- security definer is critical to avoid RLS recursion on the users table.
+create or replace function public.is_admin()
+returns boolean
+language plpgsql
+security definer set search_path = public
+as $$
+begin
+  return exists (
+    select 1 from public.users
+    where id = auth.uid() and role = 'Admin'
+  );
+end;
+$$;
 
 alter table public.users enable row level security;
 alter table public.cases enable row level security;
@@ -105,47 +135,65 @@ alter table public.courses enable row level security;
 alter table public.enrollments enable row level security;
 alter table public.compliance_reports enable row level security;
 alter table public.subscriptions enable row level security;
+alter table public.site_settings enable row level security;
+alter table public.admin_logs enable row level security;
 
 -- Policies for public.users
-create policy "Users can read own data" on public.users
-  for select using (auth.uid() = id);
+create policy "Users can read own data or admin reads all" on public.users
+  for select using (auth.uid() = id or public.is_admin());
 
-create policy "Users can update own data" on public.users
-  for update using (auth.uid() = id);
+create policy "Users can update own data or admin updates all" on public.users
+  for update using (auth.uid() = id or public.is_admin());
+
+create policy "Admins can delete users" on public.users
+  for delete using (public.is_admin());
 
 -- Policies for public.cases
 create policy "Users can CRUD own cases" on public.cases
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id or public.is_admin());
 
 -- Policies for public.tat_cases (Publicly readable)
 create policy "Anyone can read TAT precedents" on public.tat_cases
   for select using (true);
 
 create policy "Admins can manage TAT precedents" on public.tat_cases
-  for all using (
-    exists (select 1 from public.users where users.id = auth.uid() and users.role = 'Admin')
-  );
+  for all using (public.is_admin());
 
 -- Policies for public.courses (Publicly readable)
 create policy "Anyone can read courses" on public.courses
   for select using (true);
 
 create policy "Admins can manage courses" on public.courses
-  for all using (
-    exists (select 1 from public.users where users.id = auth.uid() and users.role = 'Admin')
-  );
+  for all using (public.is_admin());
 
 -- Policies for public.enrollments
 create policy "Users can CRUD own enrollments" on public.enrollments
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id or public.is_admin());
 
 -- Policies for public.compliance_reports
 create policy "Users can CRUD own compliance reports" on public.compliance_reports
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id or public.is_admin());
 
 -- Policies for public.subscriptions
 create policy "Users can read own subscriptions" on public.subscriptions
-  for select using (auth.uid() = user_id);
+  for select using (auth.uid() = user_id or public.is_admin());
+
+create policy "Admins can manage subscriptions" on public.subscriptions
+  for all using (public.is_admin());
+
+-- Policies for public.site_settings
+create policy "Anyone can read site settings" on public.site_settings
+  for select using (true);
+
+create policy "Admins can manage site settings" on public.site_settings
+  for all using (public.is_admin());
+
+-- Policies for public.admin_logs
+create policy "Admins can read admin logs" on public.admin_logs
+  for select using (public.is_admin());
+
+create policy "Admins can insert admin logs" on public.admin_logs
+  for insert with check (public.is_admin());
 
 -- ==========================================
 -- 3. Automatic User Sync Trigger
@@ -284,3 +332,18 @@ color = excluded.color,
 accent_color = excluded.accent_color,
 description = excluded.description,
 lessons = excluded.lessons;
+
+-- Seed default site settings
+insert into public.site_settings (key, value) values
+('stat_cases', '4,200+'),
+('stat_time_saved', '85%'),
+('stat_practitioners', '350+'),
+('stat_calculators', '6'),
+('hero_badge_text', 'Built for Uganda Tax & Customs Professionals'),
+('hero_title_line1', 'The tax intelligence'),
+('hero_title_line2', 'platform your practice'),
+('hero_title_line3', 'actually needs'),
+('hero_subtitle', 'AI case analysis, TAT precedent research, live tax & import calculators, and compliance checking tools — purpose-built for Uganda''s tax ecosystem.'),
+('topbar_text', '🇺🇬 Engineered for Uganda''s Tax & Customs Ecosystem'),
+('topbar_email', 'hello@taxwise.cloud')
+on conflict (key) do nothing;

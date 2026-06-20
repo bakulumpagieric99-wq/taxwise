@@ -1,5 +1,34 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { supabase } from "../lib/supabaseClient";
+
+interface SiteSettings {
+  stat_cases: string;
+  stat_time_saved: string;
+  stat_practitioners: string;
+  stat_calculators: string;
+  hero_badge_text: string;
+  hero_title_line1: string;
+  hero_title_line2: string;
+  hero_title_line3: string;
+  hero_subtitle: string;
+  topbar_text: string;
+  topbar_email: string;
+}
+
+const DEFAULTS: SiteSettings = {
+  stat_cases: "4,200+",
+  stat_time_saved: "85%",
+  stat_practitioners: "350+",
+  stat_calculators: "6",
+  hero_badge_text: "Built for Uganda Tax & Customs Professionals",
+  hero_title_line1: "The tax intelligence",
+  hero_title_line2: "platform your practice",
+  hero_title_line3: "actually needs",
+  hero_subtitle: "AI case analysis, TAT precedent research, live tax & import calculators, and compliance checking tools — purpose-built for Uganda's tax ecosystem.",
+  topbar_text: "🇺🇬 Engineered for Uganda's Tax & Customs Ecosystem",
+  topbar_email: "hello@taxwise.cloud",
+};
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -11,6 +40,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
   const [heroText, setHeroText] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [settings, setSettings] = useState<SiteSettings>(DEFAULTS);
+
+  // Fetch admin-controlled site settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const { data } = await supabase.from("site_settings").select("key,value");
+        if (data && data.length > 0) {
+          const map: Partial<SiteSettings> = {};
+          data.forEach(({ key, value }: { key: string; value: string }) => {
+            (map as Record<string, string>)[key] = value;
+          });
+          setSettings(prev => ({ ...prev, ...map }));
+        }
+      } catch {
+        // silently use defaults if table doesn't exist yet
+      }
+    };
+    fetchSettings();
+  }, []);
   const heroFull = "COMELSA Ltd – URA assessed UGX 48M under Section 28ITA for failure to withhold tax on payments to non-resident consultants. Taxpayer filed TAT appeal 45 days after objection decision.";
   const typingRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -138,9 +187,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
 
       {/* TOP BAR */}
       <div style={{ background: "#0D7C68", padding: "8px 5%", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: ".72rem", color: "rgba(255,255,255,.9)", fontWeight: 500, letterSpacing: "0.02em" }}>
-        <span>🇺🇬 Engineered for Uganda's Tax &amp; Customs Ecosystem</span>
+        <span>{settings.topbar_text}</span>
         <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>📧 hello@taxwise.cloud</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>📧 {settings.topbar_email}</span>
           <button onClick={onGetStarted} style={{ color: "white", background: "none", border: "none", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", fontSize: ".72rem", textDecoration: "underline" }}>Start Free Trial →</button>
         </div>
       </div>
@@ -218,17 +267,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
           <div className="tw-hero-text-align">
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.12)", color: "rgba(255,255,255,.8)", fontSize: ".72rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "6px 14px", borderRadius: 50, marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, background: "#4DD9C0", borderRadius: "50%", display: "inline-block", boxShadow: "0 0 6px #4DD9C0" }} />
-              Built for Uganda Tax &amp; Customs Professionals
+              {settings.hero_badge_text}
             </div>
             
             <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "clamp(2.2rem, 4.2vw, 3.6rem)", color: "white", lineHeight: 1.12, marginBottom: 20, letterSpacing: "-0.025em", fontWeight: 700 }}>
-              The tax intelligence<br />
-              platform your practice<br />
-              <span style={{ fontStyle: "italic", color: "#4DD9C0" }}>actually needs</span>
+              {settings.hero_title_line1}<br />
+              {settings.hero_title_line2}<br />
+              <span style={{ fontStyle: "italic", color: "#4DD9C0" }}>{settings.hero_title_line3}</span>
             </h1>
             
             <p style={{ color: "rgba(255,255,255,.65)", fontSize: "1.05rem", lineHeight: 1.7, marginBottom: 36, maxWidth: 520 }}>
-              AI case analysis, TAT precedent research, live tax &amp; import calculators, and compliance checking tools — purpose-built for Uganda's tax ecosystem.
+              {settings.hero_subtitle}
             </p>
             
             <div className="tw-hero-ctas" style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 40 }}>
@@ -290,14 +339,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
         </div>
       </div>
 
-      {/* STATS SECTION */}
+      {/* STATS SECTION — values controlled via Admin > Site Settings */}
       <div style={{ background: "#0C1B36", borderTop: "1px solid rgba(255,255,255,.05)", position: "relative" }}>
         <div className="tw-stats-grid" style={{ maxWidth: 1000, margin: "0 auto", padding: "48px 5%", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 }}>
           {[
-            ["4,200+", "Cases Analyzed"],
-            ["85%", "Time Saved vs Manual"],
-            ["350+", "Active Practitioners"],
-            ["6", "Live Tax Calculators"]
+            [settings.stat_cases, "Cases Analyzed"],
+            [settings.stat_time_saved, "Time Saved vs Manual"],
+            [settings.stat_practitioners, "Active Practitioners"],
+            [settings.stat_calculators, "Live Tax Calculators"],
           ].map(([num, desc], i, arr) => (
             <div key={desc} style={{ padding: "0 10px", textAlign: "center", borderRight: i < arr.length - 1 ? "1px solid rgba(255,255,255,.08)" : "none" }}>
               <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "2.4rem", color: "white", fontWeight: 700 }}>

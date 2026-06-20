@@ -126,9 +126,9 @@ export default function TaxWiseSaaS() {
       case "pricing":
         return <PricingPage user={dbUser} onRefreshUser={refreshUser} />;
       case "settings":
-        return <ProfileSettings user={dbUser} onRefreshUser={refreshUser} onNavigateToPricing={() => setPage("pricing")} />;
+        return <ProfileSettings user={dbUser} onRefreshUser={refreshUser} onNavigateToPricing={() => setPage("pricing")} onAccountDeleted={handleSignOut} />;
       case "admin":
-        return <AdminPortal onNavigate={setPage} />;
+        return <AdminPortal onNavigate={setPage} currentAdminId={dbUser.id} />;
       default:
         return <Dashboard user={dbUser} onNavigate={setPage} />;
     }
