@@ -89,6 +89,15 @@ export default function TaxWiseSaaS() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("page") === "pricing" || params.get("status")) {
+        setPage("pricing");
+      }
+    }
+  }, []);
+
   const handleSignOut = async () => {
     setLoading(true);
     await supabase.auth.signOut();
