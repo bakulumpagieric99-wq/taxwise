@@ -319,7 +319,7 @@ const CaseAnalyzer = () => {
 
   const downloadReport = () => {
     if (!result || result.error) return;
-    const content = `TAXWISE CASE ANALYSIS REPORT\n${"=".repeat(50)}\nGenerated: ${new Date().toLocaleString()}\nCase Type: ${caseType}\n\nSUMMARY\n${result.summary}\n\nKEY LEGAL ISSUES\n${result.keyIssues.map((i, n) => `${n + 1}. ${i}`).join("\n")}\n\nVERDICT / OUTCOME\n${result.verdict}\n\nRISK LEVEL: ${result.risk?.toUpperCase()}\n${result.riskNote}\n\nPRACTICAL ADVICE\n${result.advice}\n\nAPPLICABLE LAW\n${result.applicableLaw?.join("\n")}\n\nTAGS: ${result.tags?.join(", ")}\n\n${"=".repeat(50)}\nPowered by TaxWise Uganda | taxwise.ug`;
+    const content = `TAXWISE CASE ANALYSIS REPORT\n${"=".repeat(50)}\nGenerated: ${new Date().toLocaleString()}\nCase Type: ${caseType}\n\nSUMMARY\n${result.summary}\n\nKEY LEGAL ISSUES\n${result.keyIssues.map((i, n) => `${n + 1}. ${i}`).join("\n")}\n\nVERDICT / OUTCOME\n${result.verdict}\n\nRISK LEVEL: ${result.risk?.toUpperCase()}\n${result.riskNote}\n\nPRACTICAL ADVICE\n${result.advice}\n\nAPPLICABLE LAW\n${result.applicableLaw?.join("\n")}\n\nTAGS: ${result.tags?.join(", ")}\n\n${"=".repeat(50)}\nPowered by TaxWise Uganda | taxwise.cloud`;
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = "taxwise-case-report.txt"; a.click();

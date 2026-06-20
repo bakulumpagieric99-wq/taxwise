@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
         customizations: {
           title: "TaxWise Uganda",
           description: `Subscription for ${PLAN_NAMES[normalizedPlan]}`,
-          logo: "https://taxwise.ug/logo.png", // Replace with actual logo URL
+          logo: "https://taxwise.cloud/logo.png", // Replace with actual logo URL
         },
       }),
     });
