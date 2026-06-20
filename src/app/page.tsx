@@ -27,6 +27,7 @@ export default function TaxWiseSaaS() {
   const [page, setPage] = useState("dashboard");
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<"landing" | "auth">("landing");
+  const [isRecovering, setIsRecovering] = useState(false);
 
   const refreshUser = async () => {
     try {
@@ -72,9 +73,14 @@ export default function TaxWiseSaaS() {
   useEffect(() => {
     refreshUser();
     
-    // Subscribe to auth state updates (login, logout, token refresh)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      refreshUser();
+    // Subscribe to auth state updates (login, logout, token refresh, password recovery)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setIsRecovering(true);
+        setView("auth");
+      } else {
+        refreshUser();
+      }
     });
 
     return () => {
@@ -164,6 +170,24 @@ export default function TaxWiseSaaS() {
           </div>
         </div>
       </div>
+    );
+  }
+
+  // Show update-password screen if user clicked recovery link
+  if (isRecovering) {
+    return (
+      <AuthPage
+        initialMode="update-password"
+        onLoginSuccess={() => {
+          setIsRecovering(false);
+          refreshUser();
+        }}
+        onBack={() => {
+          setIsRecovering(false);
+          supabase.auth.signOut();
+          setView("landing");
+        }}
+      />
     );
   }
 

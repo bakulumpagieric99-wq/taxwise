@@ -1,11 +1,11 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { C } from "../lib/constants";
 import { Card, Button } from "./UI";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type AuthMode = "login" | "signup" | "forgot" | "reset-code" | "verify";
+type AuthMode = "login" | "signup" | "forgot" | "reset-code" | "verify" | "update-password";
 
 interface FieldErrors {
   name?: string;
@@ -21,6 +21,7 @@ interface FieldErrors {
 interface AuthPageProps {
   onLoginSuccess: () => void;
   onBack?: () => void;
+  initialMode?: AuthMode;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -88,14 +89,21 @@ interface OtpInputProps {
   value: string;
   onChange: (val: string) => void;
   error?: string;
+  length?: number;
+  alphanumeric?: boolean;
 }
 
-const OtpInput: React.FC<OtpInputProps> = ({ value, onChange, error }) => {
+const OtpInput: React.FC<OtpInputProps> = ({ value, onChange, error, length = 6, alphanumeric = false }) => {
   const inputs = useRef<(HTMLInputElement | null)[]>([]);
-  const digits = value.padEnd(6, "").split("").slice(0, 6);
+  
+  const cleanValue = useCallback((val: string) => {
+    return alphanumeric ? val.replace(/[^a-zA-Z0-9]/g, "") : val.replace(/\D/g, "");
+  }, [alphanumeric]);
+
+  const digits = cleanValue(value).padEnd(length, "").split("").slice(0, length);
 
   const focusBox = (i: number) => {
-    inputs.current[Math.max(0, Math.min(5, i))]?.focus();
+    inputs.current[Math.max(0, Math.min(length - 1, i))]?.focus();
   };
 
   const handleKeyDown = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -104,10 +112,10 @@ const OtpInput: React.FC<OtpInputProps> = ({ value, onChange, error }) => {
       const next = [...digits];
       if (next[i]) {
         next[i] = "";
-        onChange(next.join(""));
+        onChange(cleanValue(next.join("")));
       } else if (i > 0) {
         next[i - 1] = "";
-        onChange(next.join(""));
+        onChange(cleanValue(next.join("")));
         focusBox(i - 1);
       }
     } else if (e.key === "ArrowLeft") {
@@ -118,53 +126,51 @@ const OtpInput: React.FC<OtpInputProps> = ({ value, onChange, error }) => {
   };
 
   const handleChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value.replace(/\D/g, "");
+    const raw = cleanValue(e.target.value);
     if (!raw) return;
-    // Support paste — spread digits across boxes
+    // Support paste — spread characters across boxes
     if (raw.length > 1) {
-      const pasted = raw.slice(0, 6).split("");
+      const pasted = raw.slice(0, length).split("");
       const next = [...digits];
-      pasted.forEach((ch, idx) => { if (i + idx < 6) next[i + idx] = ch; });
-      onChange(next.join(""));
-      focusBox(Math.min(5, i + pasted.length));
+      pasted.forEach((ch, idx) => { if (i + idx < length) next[i + idx] = ch; });
+      onChange(cleanValue(next.join("")));
+      focusBox(Math.min(length - 1, i + pasted.length));
       return;
     }
     const next = [...digits];
     next[i] = raw[0];
-    onChange(next.join(""));
-    if (i < 5) focusBox(i + 1);
+    onChange(cleanValue(next.join("")));
+    if (i < length - 1) focusBox(i + 1);
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const raw = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-    const next = raw.padEnd(6, "").split("").slice(0, 6);
-    // Fill only available chars
+    const raw = cleanValue(e.clipboardData.getData("text")).slice(0, length);
     const filled = digits.map((d, i) => (raw[i] !== undefined ? raw[i] : d));
-    onChange(filled.join(""));
-    focusBox(Math.min(5, raw.length));
+    onChange(cleanValue(filled.join("")));
+    focusBox(Math.min(length - 1, raw.length));
   };
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 4 }}>
-        {[0, 1, 2, 3, 4, 5].map((i) => (
+      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 4, flexWrap: "wrap" }}>
+        {Array.from({ length }).map((_, i) => (
           <input
             key={i}
             ref={(el) => { inputs.current[i] = el; }}
             type="text"
-            inputMode="numeric"
-            maxLength={6}
+            inputMode={alphanumeric ? "text" : "numeric"}
+            maxLength={length}
             value={digits[i] || ""}
             onChange={(e) => handleChange(i, e)}
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={handlePaste}
             onFocus={(e) => e.target.select()}
             style={{
-              width: 46,
-              height: 54,
+              width: length === 8 ? 36 : 46,
+              height: length === 8 ? 44 : 54,
               textAlign: "center",
-              fontSize: "1.4rem",
+              fontSize: length === 8 ? "1.2rem" : "1.4rem",
               fontWeight: 800,
               fontFamily: "'Inter', monospace",
               border: `2px solid ${error ? C.red : digits[i] ? C.teal : C.border}`,
@@ -355,8 +361,8 @@ const ConfirmPasswordField: React.FC<{
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) => {
-  const [mode, setMode] = useState<AuthMode>("login");
+export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack, initialMode }) => {
+  const [mode, setMode] = useState<AuthMode>(initialMode || "login");
 
   // Sign-in / Sign-up
   const [name, setName] = useState("");
@@ -391,6 +397,12 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
     setConfirmNewPassword("");
   };
 
+  useEffect(() => {
+    if (initialMode) {
+      switchMode(initialMode);
+    }
+  }, [initialMode]);
+
   // ── Validate login / signup fields ──
   const validate = useCallback((): boolean => {
     const errors: FieldErrors = {};
@@ -403,7 +415,18 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
     }
 
     if (mode === "reset-code") {
-      if (otpCode.replace(/\D/g, "").length < 6) errors.otp = "Enter the full 6-digit code.";
+      if (otpCode.replace(/[^a-zA-Z0-9]/g, "").length < 8) errors.otp = "Enter the full 8-character code.";
+      if (!newPassword) errors.newPassword = "New password is required.";
+      else if (newPassword.length < 8) errors.newPassword = "Must be at least 8 characters.";
+      else if (!/[A-Z]/.test(newPassword)) errors.newPassword = "Must include an uppercase letter.";
+      else if (!/[0-9]/.test(newPassword)) errors.newPassword = "Must include a number.";
+      if (!confirmNewPassword) errors.confirmNewPassword = "Please confirm your new password.";
+      else if (newPassword !== confirmNewPassword) errors.confirmNewPassword = "Passwords do not match.";
+      setFieldErrors(errors);
+      return Object.keys(errors).length === 0;
+    }
+
+    if (mode === "update-password") {
       if (!newPassword) errors.newPassword = "New password is required.";
       else if (newPassword.length < 8) errors.newPassword = "Must be at least 8 characters.";
       else if (!/[A-Z]/.test(newPassword)) errors.newPassword = "Must include an uppercase letter.";
@@ -477,6 +500,24 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
       setSuccessMsg("✅ Password reset! You can now sign in with your new password.");
     } catch (err: any) {
       setGlobalError(err?.message || "Invalid or expired code. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ── Update password directly (recovery link bypass) ──
+  const handleUpdatePasswordOnly = async () => {
+    if (!validate()) return;
+    setLoading(true); setGlobalError(""); setSuccessMsg("");
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      // Sign out recovery session, go to login
+      await supabase.auth.signOut();
+      switchMode("login");
+      setSuccessMsg("✅ Password updated successfully! You can now sign in.");
+    } catch (err: any) {
+      setGlobalError(err?.message || "Failed to update password.");
     } finally {
       setLoading(false);
     }
@@ -959,12 +1000,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
                 {/* OTP boxes */}
                 <div style={{ marginBottom: 6 }}>
                   <label style={{ display: "block", fontSize: "0.8rem", fontWeight: 700, color: C.navy, marginBottom: 10, textAlign: "center" }}>
-                    6-Digit Reset Code <span style={{ color: C.red }}>*</span>
+                    8-Character Reset Code <span style={{ color: C.red }}>*</span>
                   </label>
                   <OtpInput
                     value={otpCode}
                     onChange={(v) => { setOtpCode(v); setFieldErrors(f => ({ ...f, otp: undefined })); }}
                     error={fieldErrors.otp}
+                    length={8}
+                    alphanumeric={true}
                   />
                 </div>
 
@@ -1004,7 +1047,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
 
                 <Button
                   onClick={handleResetWithCode}
-                  disabled={loading || otpCode.length < 6}
+                  disabled={loading || otpCode.length < 8}
                   style={{ width: "100%", justifyContent: "center", marginBottom: 16 }}
                 >
                   {loading ? "⟳ Resetting..." : "Reset My Password →"}
@@ -1012,6 +1055,61 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, onBack }) =>
 
                 <div style={{ textAlign: "center" }}>
                   <button onClick={() => switchMode("forgot")} className="forgot-link">← Back</button>
+                </div>
+              </div>
+            )}
+
+            {/* ════════════════════════════════════════════
+                UPDATE-PASSWORD SCREEN — From recovery link
+            ════════════════════════════════════════════ */}
+            {mode === "update-password" && (
+              <div className="auth-form-content">
+                <div style={{ marginBottom: 22 }}>
+                  <div className="auth-icon-circle" style={{ background: "#E6F5F2", color: C.teal, width: 60, height: 60 }}>
+                    <KeyIcon />
+                  </div>
+                  <h2 style={{ fontSize: "1.3rem", fontWeight: 800, color: C.navy, letterSpacing: "-0.025em", marginBottom: 6 }}>
+                    Choose new password
+                  </h2>
+                  <p style={{ color: C.muted, fontSize: "0.82rem", lineHeight: 1.55, fontWeight: 500 }}>
+                    Please enter and confirm your new password below.
+                  </p>
+                </div>
+
+                <PasswordField
+                  label="New Password"
+                  value={newPassword}
+                  onChange={(v) => { setNewPassword(v); setFieldErrors(f => ({ ...f, newPassword: undefined })); }}
+                  error={fieldErrors.newPassword}
+                  required
+                  showStrength
+                />
+
+                <ConfirmPasswordField
+                  label="Confirm New Password"
+                  value={confirmNewPassword}
+                  matchValue={newPassword}
+                  onChange={(v) => { setConfirmNewPassword(v); setFieldErrors(f => ({ ...f, confirmNewPassword: undefined })); }}
+                  error={fieldErrors.confirmNewPassword}
+                  required
+                />
+
+                {globalError && <div className="auth-alert auth-alert-error">{globalError}</div>}
+                {successMsg && <div className="auth-alert auth-alert-success">{successMsg}</div>}
+
+                <Button
+                  onClick={handleUpdatePasswordOnly}
+                  disabled={loading}
+                  style={{ width: "100%", justifyContent: "center", marginBottom: 16 }}
+                >
+                  {loading ? "⟳ Saving..." : "Save New Password →"}
+                </Button>
+
+                <div style={{ textAlign: "center" }}>
+                  <button onClick={() => {
+                    if (onBack) onBack();
+                    else switchMode("login");
+                  }} className="forgot-link">← Cancel</button>
                 </div>
               </div>
             )}
