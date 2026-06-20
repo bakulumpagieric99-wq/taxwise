@@ -12,6 +12,7 @@ import { EducationHub } from "../components/EducationHub";
 import { ComplianceChecker } from "../components/ComplianceChecker";
 import { PricingPage } from "../components/PricingPage";
 import { AdminPortal } from "../components/AdminPortal";
+import { ProfileSettings } from "../components/ProfileSettings";
 
 interface DbProfile {
   id: string;
@@ -124,6 +125,8 @@ export default function TaxWiseSaaS() {
         return <ComplianceChecker user={dbUser} />;
       case "pricing":
         return <PricingPage user={dbUser} onRefreshUser={refreshUser} />;
+      case "settings":
+        return <ProfileSettings user={dbUser} onRefreshUser={refreshUser} onNavigateToPricing={() => setPage("pricing")} />;
       case "admin":
         return <AdminPortal onNavigate={setPage} />;
       default:
@@ -247,6 +250,7 @@ export default function TaxWiseSaaS() {
 
   // Get dynamic page title for header
   const getPageTitle = () => {
+    if (page === "settings") return "Profile & Settings";
     const activeItem = navItems.find(n => n.id === page);
     return activeItem ? activeItem.label : "Dashboard";
   };
@@ -307,7 +311,22 @@ export default function TaxWiseSaaS() {
 
         {/* PROFILE SECTION */}
         <div style={{ padding: "18px 20px", borderTop: "1px solid rgba(255,255,255,.05)", background: "rgba(15, 32, 68, 0.2)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+          <div 
+            onClick={() => setPage("settings")}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: 12, 
+              marginBottom: 12,
+              cursor: "pointer",
+              padding: "6px 8px",
+              borderRadius: "10px",
+              margin: "-6px -8px 6px",
+              transition: "background 0.2s ease, transform 0.15s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+          >
             <div 
               style={{ 
                 width: 38, 
